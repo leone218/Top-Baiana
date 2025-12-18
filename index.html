@@ -1,0 +1,814 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <!-- Meta Tag Otimizada para Mobile (Sem Zoom, Fullscreen real) -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <meta name="theme-color" content="#0f0505">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <title>Pizzaria Top Baiana</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+    /* Placeholder para imagens ausentes dos calzones */
+    .card-img.no-img {
+        background: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'><path d='M12 2 L15 8 L21 9 L17 14 L18 21 L12 18 L6 21 L7 14 L3 9 L9 8 Z' fill='%23cccccc'/></svg>") center/60% no-repeat var(--glass-bg);
+        border-radius: 8px;
+        min-height: 110px;
+        background-size: 60% auto;
+    }
+
+    /* Forçar comportamento consistente de abas */
+		.tab-content { display: none; }
+		.tab-content.active { display: block; }
+
+		/* Destaque de nav inferior */
+		.bottom-nav .nav-item {
+			opacity: 0.9;
+			transition: background .18s, color .18s, transform .12s;
+		}
+		.bottom-nav .nav-item.active {
+			background: linear-gradient(180deg, rgba(0,0,0,0.03), rgba(0,0,0,0.02));
+			border-radius: 10px;
+			transform: translateY(-2px);
+		}
+		/* Garante que o conteúdo não fique por baixo da nav fixa */
+		.app-content { padding-bottom: 90px; }
+    </style>
+</head>
+<body>
+
+    <div id="toast-box"></div>
+
+    <!-- TELA INICIAL (HOME) -->
+    <section id="home-screen" class="screen active">
+        <div class="overlay"></div>
+        <div class="content-home">
+            <div class="logo-area">
+                <div class="logo-img">
+                    <img src="assets/LOGO/top baiana sem fundo(1).png" alt="Logo Pizzaria Top Baiana" style="width: 300px; height: auto;">
+                </div>
+            </div>
+
+            <h1 class="main-title">A MELHOR<br><span class="highlight">DA REGIÃO</span></h1>
+
+            <div class="hours-container">
+                <h3><i class="far fa-clock"></i> ESTAMOS ABERTOS</h3>
+                <div class="badge-group">
+                    <div class="badge">
+                        <span class="days">SEG A SEX</span>
+                        <span class="time">17:00 - 23:00</span>
+                    </div>
+                    <div class="badge">
+                        <span class="days">DOM E FERIADOS</span>
+                        <span class="time">16:30 - 23:00</span>
+                    </div>
+                </div>
+            </div>
+
+            <button id="btn-cardapio" class="cta-button pulse" onclick="abrirCardapio()">
+                FAZER PEDIDO <i class="fas fa-chevron-right"></i>
+            </button>
+        </div>
+    </section>
+
+    <!-- TELA DO APP (CARDÁPIO/CARRINHO/PERFIL) -->
+    <section id="app-screen" class="screen">
+        
+        <header class="app-header">
+            <button id="back-home-btn" aria-label="Voltar">
+                <i class="fas fa-arrow-left"></i>
+            </button>
+            <h2 id="header-title">Cardápio</h2>
+            <div class="cart-icon-wrap" onclick="irParaCarrinho()">
+                <i class="fas fa-shopping-bag"></i>
+                <span id="cart-count" class="badge-count">0</span>
+            </div>
+        </header>
+
+        <div class="app-content">
+
+            <!-- ABA 1: PEDIDOS (CARDÁPIO) -->
+            <div id="tab-pedidos" class="tab-content active">
+
+                    <nav class="category-nav">
+                    <a href="#cat-pizzas" class="nav-link">Pizzas</a>
+                    <a href="#cat-calzones" class="nav-link">Calzones</a>
+                    <a href="#cat-bebidas" class="nav-link">Bebidas</a>
+                    </nav>
+                
+                    <div class="category-section" id="cat-pizzas">
+                    <h3 class="cat-title"><i class="fas fa-pizza-slice"></i> Pizzas Tradicionais</h3>
+                    <div class="menu-grid" id="grid-pizzas">
+                        <!-- Itens renderizados via HTML ou JS -->
+                        <!-- Pizzas Com (ids 100 - 150) -->
+
+                        <div class="item-card" data-id="100" data-name="Romeu E Julieta" data-price="52.99">
+                            <div class="card-img">
+                                <img src="assets/pizzas tradicionais/Romeu E Julieta.webp" alt="Romeu E Julieta" onerror="this.style.display='none'; this.parentNode.classList.add('no-img')">
+                            </div>
+                            <div class="card-details">
+                                <h4>Romeu E Julieta</h4>
+                                <p>Goiabada, Requeijão cremoso</p>
+                                <div class="card-footer">
+                                    <span class="price">R$ 52,99</span>
+                                    <button class="add-btn">Adicionar</button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="item-card" data-id="101" data-name="Prestigio" data-price="52.99">
+                            <div class="card-img">
+                                <img src="assets/pizzas tradicionais/Prestigio.webp" alt="Prestigio" onerror="this.style.display='none'; this.parentNode.classList.add('no-img')">
+                            </div>
+                            <div class="card-details">
+                                <h4>Prestigio</h4>
+                                <p>Creme de avelã, coco ralado</p>
+                                <div class="card-footer">
+                                    <span class="price">R$ 52,99</span>
+                                    <button class="add-btn">Adicionar</button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="item-card" data-id="102" data-name="Milho Verde" data-price="52.99">
+                            <div class="card-img">
+                                <img src="assets/pizzas tradicionais/Milho Verde.webp" alt="Milho Verde" onerror="this.style.display='none'; this.parentNode.classList.add('no-img')">
+                            </div>
+                            <div class="card-details">
+                                <h4>Milho Verde</h4>
+                                <p>Mussarela, milho, orégano.</p>
+                                <div class="card-footer">
+                                    <span class="price">R$ 52,99</span>
+                                    <button class="add-btn">Adicionar</button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="item-card" data-id="103" data-name="Marguerita" data-price="52.99">
+                            <div class="card-img"><img src="assets/pizzas tradicionais/marguerita.jpg" alt="Marguerita" onerror="this.style.display='none'; this.parentNode.classList.add('no-img')"></div>
+                            <div class="card-details">
+                                <h4>Marguerita</h4>
+                                <p>Molho, Mussarela, tomate, manjericão, orégano.</p>
+                                <div class="card-footer"><span class="price">R$ 52,99</span><button class="add-btn">Adicionar</button></div>
+                            </div>
+                        </div>
+
+                        <div class="item-card" data-id="104" data-name="M&M's" data-price="52.99">
+                            <div class="card-img"><img src="assets/pizzas tradicionais/M&M's.webp" alt="M&M's" onerror="this.style.display='none'; this.parentNode.classList.add('no-img')"></div>
+                            <div class="card-details">
+                                <h4>M&M's</h4>
+                                <p>Chocolate e m&m's</p>
+                                <div class="card-footer"><span class="price">R$ 52,99</span><button class="add-btn">Adicionar</button></div>
+                            </div>
+                        </div>
+
+                        <div class="item-card" data-id="105" data-name="Frango Com Cheddar" data-price="52.99">
+                            <div class="card-img"><img src="assets/pizzas tradicionais/Frango com Cheddar.webp" alt="Frango Com Cheddar" onerror="this.style.display='none'; this.parentNode.classList.add('no-img')"></div>
+                            <div class="card-details">
+                                <h4>Frango Com Cheddar</h4>
+                                <p>Mussarela, frango com cheddar e orégano</p>
+                                <div class="card-footer"><span class="price">R$ 52,99</span><button class="add-btn">Adicionar</button></div>
+                            </div>
+                        </div>
+
+                        <div class="item-card" data-id="106" data-name="Frango Com Catupiry" data-price="52.99">
+                            <div class="card-img"><img src="assets/pizzas tradicionais/frango com catupiry.jpg" alt="Frango Com Catupiry" onerror="this.style.display='none'; this.parentNode.classList.add('no-img')"></div>
+                            <div class="card-details">
+                                <h4>Frango Com Catupiry</h4>
+                                <p>Mussarela, frango com catupiry e orégano</p>
+                                <div class="card-footer"><span class="price">R$ 52,99</span><button class="add-btn">Adicionar</button></div>
+                            </div>
+                        </div>
+
+                        <div class="item-card" data-id="107" data-name="Da Casa" data-price="52.99">
+                            <div class="card-img"><img src="assets/pizzas tradicionais/Da Casa.webp" alt="Da Casa" onerror="this.style.display='none'; this.parentNode.classList.add('no-img')"></div>
+                            <div class="card-details">
+                                <h4>Da Casa</h4>
+                                <p>Mussarela, manjericão, tomate, bacon, milho e orégano</p>
+                                <div class="card-footer"><span class="price">R$ 52,99</span><button class="add-btn">Adicionar</button></div>
+                            </div>
+                        </div>
+
+                        <div class="item-card" data-id="108" data-name="Calabresa" data-price="52.99">
+                            <div class="card-img"><img src="assets/pizzas tradicionais/calabresa.jpg" alt="Calabresa" onerror="this.style.display='none'; this.parentNode.classList.add('no-img')"></div>
+                            <div class="card-details">
+                                <h4>Calabresa</h4>
+                                <p>Mussarela, calabresa, cebola, orégano</p>
+                                <div class="card-footer"><span class="price">R$ 52,99</span><button class="add-btn">Adicionar</button></div>
+                            </div>
+                        </div>
+
+                        <div class="item-card" data-id="109" data-name="Calabresa Com Catupiry" data-price="52.99">
+                            <div class="card-img"><img src="assets/pizzas tradicionais/Calabresa com catupiry.webp" alt="Calabresa Com Catupiry" onerror="this.style.display='none'; this.parentNode.classList.add('no-img')"></div>
+                            <div class="card-details">
+                                <h4>Calabresa Com Catupiry</h4>
+                                <p>Mussarela, calabresa, catupiry e orégano</p>
+                                <div class="card-footer"><span class="price">R$ 52,99</span><button class="add-btn">Adicionar</button></div>
+                            </div>
+                        </div>
+
+                        <div class="item-card" data-id="110" data-name="Calabresa Com Cheddar" data-price="52.99">
+                            <div class="card-img"><img src="assets/pizzas tradicionais/calabresa com cheddar.webp" alt="Calabresa Com Cheddar" onerror="this.style.display='none'; this.parentNode.classList.add('no-img')"></div>
+                            <div class="card-details">
+                                <h4>Calabresa Com Cheddar</h4>
+                                <p>Mussarela, calabresa, cheddar e orégano</p>
+                                <div class="card-footer"><span class="price">R$ 52,99</span><button class="add-btn">Adicionar</button></div>
+                            </div>
+                        </div>
+
+                        <div class="item-card" data-id="111" data-name="Brigadeiro" data-price="52.99">
+                            <div class="card-img"><img src="assets/pizzas tradicionais/brigadeiro.webp" alt="Brigadeiro" onerror="this.style.display='none'; this.parentNode.classList.add('no-img')"></div>
+                            <div class="card-details">
+                                <h4>Brigadeiro</h4>
+                                <p>Chocolate e granulado</p>
+                                <div class="card-footer"><span class="price">R$ 52,99</span><button class="add-btn">Adicionar</button></div>
+                            </div>
+                        </div>
+
+                        <div class="item-card" data-id="112" data-name="Beijinho" data-price="52.99">
+                            <div class="card-img"><img src="assets/pizzas tradicionais/beijinho.webp" alt="Beijinho" onerror="this.style.display='none'; this.parentNode.classList.add('no-img')"></div>
+                            <div class="card-details">
+                                <h4>Beijinho</h4>
+                                <p>Chocolate branco, coco ralado</p>
+                                <div class="card-footer"><span class="price">R$ 52,99</span><button class="add-btn">Adicionar</button></div>
+                            </div>
+                        </div>
+
+                        <div class="item-card" data-id="113" data-name="Banana Mesclada" data-price="52.99">
+                            <div class="card-img"><img src="assets/pizzas tradicionais/Banan mesclada.webp" alt="Banana Mesclada" onerror="this.style.display='none'; this.parentNode.classList.add('no-img')"></div>
+                            <div class="card-details">
+                                <h4>Banana Mesclada</h4>
+                                <p>Banana da terra, canela e melaço</p>
+                                <div class="card-footer"><span class="price">R$ 52,99</span><button class="add-btn">Adicionar</button></div>
+                            </div>
+                        </div>
+
+                        <div class="item-card" data-id="114" data-name="Baiana" data-price="52.99">
+                            <div class="card-img"><img src="assets/pizzas tradicionais/Baiana.webp" alt="Baiana" onerror="this.style.display='none'; this.parentNode.classList.add('no-img')"></div>
+                            <div class="card-details">
+                                <h4>Baiana</h4>
+                                <p>Mussarela, calabresa triturada, pimenta calabresa, ervilha e orégano</p>
+                                <div class="card-footer"><span class="price">R$ 52,99</span><button class="add-btn">Adicionar</button></div>
+                            </div>
+                        </div>
+
+                        <div class="item-card" data-id="115" data-name="Bacon" data-price="52.99">
+                            <div class="card-img"><img src="assets/pizzas tradicionais/Bacon.webp" alt="Bacon" onerror="this.style.display='none'; this.parentNode.classList.add('no-img')"></div>
+                            <div class="card-details">
+                                <h4>Bacon</h4>
+                                <p>Mussarela, bacon, cebola e orégano</p>
+                                <div class="card-footer"><span class="price">R$ 52,99</span><button class="add-btn">Adicionar</button></div>
+                            </div>
+                        </div>
+
+                        <div class="item-card" data-id="116" data-name="Frango" data-price="52.99">
+                            <div class="card-img"><img src="assets/pizzas tradicionais/Frango.webp" alt="Frango" onerror="this.style.display='none'; this.parentNode.classList.add('no-img')"></div>
+                            <div class="card-details">
+                                <h4>Frango</h4>
+                                <p>Molho, Mussarela, Frango e Orégano</p>
+                                <div class="card-footer"><span class="price">R$ 52,99</span><button class="add-btn">Adicionar</button></div>
+                            </div>
+                        </div>
+
+                        <div class="item-card" data-id="117" data-name="Portuguesa" data-price="52.99">
+                            <div class="card-img"><img src="assets/pizzas tradicionais/portuguesa.jpg" alt="Portuguesa" onerror="this.style.display='none'; this.parentNode.classList.add('no-img')"></div>
+                            <div class="card-details">
+                                <h4>Portuguesa</h4>
+                                <p>Mussarela, Presunto, Ovos, Azeitona, Cebola, Pimentão e orégano</p>
+                                <div class="card-footer"><span class="price">R$ 52,99</span><button class="add-btn">Adicionar</button></div>
+                            </div>
+                        </div>
+
+                        <div class="item-card" data-id="118" data-name="Crocante" data-price="52.99">
+                            <div class="card-img"><img src="assets/pizzas tradicionais/Crocante.webp" alt="Crocante" onerror="this.style.display='none'; this.parentNode.classList.add('no-img')"></div>
+                            <div class="card-details">
+                                <h4>Crocante</h4>
+                                <p>Mussarela, presunto, milho verde, batata palha e orégano</p>
+                                <div class="card-footer"><span class="price">R$ 52,99</span><button class="add-btn">Adicionar</button></div>
+                            </div>
+                        </div>
+
+                        <div class="item-card" data-id="119" data-name="Top Baiana" data-price="52.99">
+                            <div class="card-img"><img src="assets/pizzas tradicionais/Top baiana.jpg" alt="Top Baiana" onerror="this.style.display='none'; this.parentNode.classList.add('no-img')"></div>
+                            <div class="card-details">
+                                <h4>Top Baiana</h4>
+                                <p>Mussarela, bacon, frango, catupiry, ervilha , orégano.</p>
+                                <div class="card-footer"><span class="price">R$ 52,99</span><button class="add-btn">Adicionar</button></div>
+                            </div>
+                        </div>
+
+                        <div class="item-card" data-id="120" data-name="Lombinho" data-price="52.99">
+                            <div class="card-img"><img src="assets/pizzas tradicionais/Lombinho.webp" alt="Lombinho" onerror="this.style.display='none'; this.parentNode.classList.add('no-img')"></div>
+                            <div class="card-details">
+                                <h4>Lombinho</h4>
+                                <p>Mussarela, lombinho e orégano</p>
+                                <div class="card-footer"><span class="price">R$ 52,99</span><button class="add-btn">Adicionar</button></div>
+                            </div>
+                        </div>
+
+                        <div class="item-card" data-id="121" data-name="Lombinho com Cheddar" data-price="52.99">
+                            <div class="card-img"><img src="assets/pizzas tradicionais/Lombinho Com Cheddar.webp" alt="Lombinho com Cheddar" onerror="this.style.display='none'; this.parentNode.classList.add('no-img')"></div>
+                            <div class="card-details">
+                                <h4>Lombinho com Cheddar</h4>
+                                <p>Mussarela, lombinho, cheddar e orégano</p>
+                                <div class="card-footer"><span class="price">R$ 52,99</span><button class="add-btn">Adicionar</button></div>
+                            </div>
+                        </div>
+
+                        <div class="item-card" data-id="122" data-name="Lombinho com Catupiry" data-price="52.99">
+                            <div class="card-img"><img src="assets/pizzas tradicionais/lombinho com catupiry.webp" alt="Lombinho com Catupiry" onerror="this.style.display='none'; this.parentNode.classList.add('no-img')"></div>
+                            <div class="card-details">
+                                <h4>Lombinho com Catupiry</h4>
+                                <p>Mussarela, lombinho, catupiry e orégano</p>
+                                <div class="card-footer"><span class="price">R$ 52,99</span><button class="add-btn">Adicionar</button></div>
+                            </div>
+                        </div>
+
+                        <div class="item-card" data-id="123" data-name="Mussarela" data-price="52.99">
+                            <div class="card-img"><img src="assets/pizzas tradicionais/Mussarela.webp" alt="Mussarela" onerror="this.style.display='none'; this.parentNode.classList.add('no-img')"></div>
+                            <div class="card-details">
+                                <h4>Mussarela</h4>
+                                <p>Molho de tomate, mussarela e oregano</p>
+                                <div class="card-footer"><span class="price">R$ 52,99</span><button class="add-btn">Adicionar</button></div>
+                            </div>
+                        </div>
+
+                        <div class="item-card" data-id="124" data-name="Misto" data-price="52.99">
+                            <div class="card-img"><img src="assets/pizzas tradicionais/Misto.webp" alt="Misto" onerror="this.style.display='none'; this.parentNode.classList.add('no-img')"></div>
+                            <div class="card-details">
+                                <h4>Misto</h4>
+                                <p>Molho de tomate, mussarela, presunto e oregano</p>
+                                <div class="card-footer"><span class="price">R$ 52,99</span><button class="add-btn">Adicionar</button></div>
+                            </div>
+                        </div>
+
+                        <div class="item-card" data-id="125" data-name="Arrumadinho" data-price="52.99">
+                            <div class="card-img"><img src="assets/pizzas tradicionais/arrumadinho.jpg" alt="Arrumadinho" onerror="this.style.display='none'; this.parentNode.classList.add('no-img')"></div>
+                            <div class="card-details">
+                                <h4>Arrumadinho</h4>
+                                <p>Molho de tomate, mussarela, calabresa picada, bacon, barbecue e orágano.</p>
+                                <div class="card-footer"><span class="price">R$ 52,99</span><button class="add-btn">Adicionar</button></div>
+                            </div>
+                        </div>
+
+                        <div class="item-card" data-id="126" data-name="4 Queijos" data-price="52.99">
+                            <div class="card-img"><img src="assets/pizzas tradicionais/4 queijos.jpg" alt="4 Queijos" onerror="this.style.display='none'; this.parentNode.classList.add('no-img')"></div>
+                            <div class="card-details">
+                                <h4>4 Queijos</h4>
+                                <p>Molho, Mussarela,Cheddar, Parmesão, Catupiry e Oregano.</p>
+                                <div class="card-footer"><span class="price">R$ 52,99</span><button class="add-btn">Adicionar</button></div>
+                            </div>
+                        </div>
+
+                        <div class="item-card" data-id="127" data-name="Texana" data-price="52.99">
+                            <div class="card-img"><img src="assets/pizzas tradicionais/texana.webp" alt="Texana" onerror="this.style.display='none'; this.parentNode.classList.add('no-img')"></div>
+                            <div class="card-details">
+                                <h4>Texana</h4>
+                                <p>Molho, mussarela, frango, bacon, azeitona, barbecue & orégano.</p>
+                                <div class="card-footer"><span class="price">R$ 52,99</span><button class="add-btn">Adicionar</button></div>
+                            </div>
+                        </div>
+
+                        <div class="item-card" data-id="128" data-name="Três sabores" data-price="52.99">
+                            <div class="card-img"><img src="assets/pizzas tradicionais/tres sabores.webp" alt="Três sabores" onerror="this.style.display='none'; this.parentNode.classList.add('no-img')"></div>
+                            <div class="card-details">
+                                <h4>Três sabores</h4>
+                                <p>Molho, mussarela, lombinho, calabrresa triturada, milho & orégano</p>
+                                <div class="card-footer"><span class="price">R$ 52,99</span><button class="add-btn">Adicionar</button></div>
+                            </div>
+                        </div>
+
+                        <div class="item-card" data-id="129" data-name="Moda do chef" data-price="52.99">
+                            <div class="card-img"><img src="assets/pizzas tradicionais/Moda do chef.webp" alt="Moda do chef" onerror="this.style.display='none'; this.parentNode.classList.add('no-img')"></div>
+                            <div class="card-details">
+                                <h4>Moda do chef</h4>
+                                <p>Molho, Milho + Bacon + Catupiry</p>
+                                <div class="card-footer"><span class="price">R$ 52,99</span><button class="add-btn">Adicionar</button></div>
+                            </div>
+                        </div>
+
+                        <div class="item-card" data-id="130" data-name="Texas da top" data-price="52.99">
+                            <div class="card-img"><img src="assets/pizzas tradicionais/texas da top.webp" alt="Texas da top" onerror="this.style.display='none'; this.parentNode.classList.add('no-img')"></div>
+                            <div class="card-details">
+                                <h4>Texas da top</h4>
+                                <p>Molho tomate, Mussarela, frango, gorgonzola, bacon barbecue.</p>
+                                <div class="card-footer"><span class="price">R$ 52,99</span><button class="add-btn">Adicionar</button></div>
+                            </div>
+                        </div>
+
+                        <div class="item-card" data-id="131" data-name="Baianissima" data-price="52.99">
+                            <div class="card-img"><img src="assets/pizzas tradicionais/Baianissima.webp" alt="Baianissima" onerror="this.style.display='none'; this.parentNode.classList.add('no-img')"></div>
+                            <div class="card-details">
+                                <h4>Baianissima</h4>
+                                <p>Molho de tomate, mussarela, calabresa, presunto, ovo, requeijão cremoso, provolone, cebola</p>
+                                <div class="card-footer"><span class="price">R$ 52,99</span><button class="add-btn">Adicionar</button></div>
+                            </div>
+                        </div>
+
+                        <div class="item-card" data-id="132" data-name="Lombo do Chefe" data-price="52.99">
+                            <div class="card-img"><img src="assets/pizzas tradicionais/Lombo do chefe.webp" alt="Lombo do Chefe" onerror="this.style.display='none'; this.parentNode.classList.add('no-img')"></div>
+                            <div class="card-details">
+                                <h4>Lombo do Chefe</h4>
+                                <p>Molho de tomate , Lombinho , Mussarela , Cebola e Barbecue</p>
+                                <div class="card-footer"><span class="price">R$ 52,99</span><button class="add-btn">Adicionar</button></div>
+                            </div>
+                        </div>
+
+                        <div class="item-card" data-id="133" data-name="Queijada" data-price="52.99">
+                            <div class="card-img"><img src="assets/pizzas tradicionais/queijada.webp" alt="Queijada" onerror="this.style.display='none'; this.parentNode.classList.add('no-img')"></div>
+                            <div class="card-details">
+                                <h4>Queijada</h4>
+                                <p>Molho de tomate, mussarela, queijo coalho, melaço.</p>
+                                <div class="card-footer"><span class="price">R$ 52,99</span><button class="add-btn">Adicionar</button></div>
+                            </div>
+                        </div>
+                        </div>
+                </div>
+
+
+                <div class="category-section" id="cat-calzones">
+                    <h3 class="cat-title"><i class="fas fa-utensils"></i> Calzones - Médio</h3>
+                    <div class="menu-grid" id="grid-calzones">
+
+                        <div class="item-card" data-id="151" data-name="Calzone - O Melhor" data-price="40.99">
+                            <div class="card-img">
+                                <img src="assets/calzones/O Melhor.jpg" alt="O Melhor" onerror="this.style.display='none'; this.parentNode.classList.add('no-img')">
+                            </div>
+                            <span class="tag-cashback">10% cashback</span>
+                            <div class="card-details">
+                                <h4>O Melhor</h4>
+                                <p>Mussarela, bacon, frango, cebola, calabresa picada e orégano.</p>
+                                <div class="card-footer">
+                                    <span class="price">R$ 40,99</span>
+                                    <button class="add-btn">Adicionar</button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="item-card" data-id="152" data-name="Calzone - Oxente" data-price="40.99">
+                            <div class="card-img">
+                                <img src="assets/calzones/Oxente.jpg" alt="Oxente" onerror="this.style.display='none'; this.parentNode.classList.add('no-img')">
+                            </div>
+                            <span class="tag-cashback">10% cashback</span>
+                            <div class="card-details">
+                                <h4>Oxente</h4>
+                                <p>Mussarela, ervilha, presunto, ovos, lombinho, azeitona e orégano.</p>
+                                <div class="card-footer">
+                                    <span class="price">R$ 40,99</span>
+                                    <button class="add-btn">Adicionar</button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="item-card" data-id="153" data-name="Calzone - Me Leva" data-price="40.99">
+                            <div class="card-img">
+                                <img src="assets/calzones/Me Leva.jpg" alt="Me Leva" onerror="this.style.display='none'; this.parentNode.classList.add('no-img')">
+                            </div>
+                            <span class="tag-cashback">10% cashback</span>
+                            <div class="card-details">
+                                <h4>Me Leva</h4>
+                                <p>Mussarela, lombinho, peito de peru, milho, cheddar e orégano.</p>
+                                <div class="card-footer">
+                                    <span class="price">R$ 40,99</span>
+                                    <button class="add-btn">Adicionar</button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="item-card" data-id="154" data-name="Calzone - Boa Vista" data-price="40.99">
+                            <div class="card-img">
+                                <img src="assets/calzones/Boa Vista.jpg" alt="Boa Vista" onerror="this.style.display='none'; this.parentNode.classList.add('no-img')">
+                            </div>
+                            <span class="tag-cashback">10% cashback</span>
+                            <div class="card-details">
+                                <h4>Boa Vista</h4>
+                                <p>Mussarela, presunto, calabresa picada, catupiry e orégano.</p>
+                                <div class="card-footer">
+                                    <span class="price">R$ 40,99</span>
+                                    <button class="add-btn">Adicionar</button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="item-card" data-id="155" data-name="Calzone - De Nego" data-price="40.99">
+                            <div class="card-img">
+                                <img src="assets/calzones/De Nego.jpg" alt="De Nego" onerror="this.style.display='none'; this.parentNode.classList.add('no-img')">
+                            </div>
+                            <span class="tag-cashback">10% cashback</span>
+                            <div class="card-details">
+                                <h4>De Nego</h4>
+                                <p>Mussarela, frango, presunto, ervilha, milho, cheddar e orégano.</p>
+                                <div class="card-footer">
+                                    <span class="price">R$ 40,99</span>
+                                    <button class="add-btn">Adicionar</button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="item-card" data-id="156" data-name="Calzone - 5 Queijos" data-price="40.99">
+                            <div class="card-img">
+                                <img src="assets/calzones/5 Queijos.jpg" alt="5 Queijos" onerror="this.style.display='none'; this.parentNode.classList.add('no-img')">
+                            </div>
+                            <span class="tag-cashback">10% cashback</span>
+                            <div class="card-details">
+                                <h4>5 Queijos</h4>
+                                <p>Mussarela, provolone, catupiry, gorgonzola, parmesão e orégano.</p>
+                                <div class="card-footer">
+                                    <span class="price">R$ 40,99</span>
+                                    <button class="add-btn">Adicionar</button>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+                  
+              <!-- Seção de Bebidas  -->  
+               <!-- Tentar deixar as bebidas com ids da 201 a 220 -->
+                 <!-- Bebidas Com (ids 201 - 220) -->
+                <div class="category-section" id="cat-bebidas">
+                    <h3 class="cat-title"><i class="fas fa-wine-bottle"></i> Bebidas</h3>
+                    <div class="menu-grid compact">
+                        <div class="item-card mini" data-id="201" data-name="Pepsi 1L" data-price="9.99">
+                            <div class="card-img"><img src="assets/bebidas/pepsi-removebg-preview.png" alt="Pepsi 1L" onerror="this.style.display='none'; this.parentNode.classList.add('no-img')"></div>
+                            <div class="card-details">
+                                <h4>Pepsi 1L</h4>
+                                <div class="card-footer">
+                                    <span class="price">R$ 9,99</span>
+                                    <button class="add-btn icon-only"><i class="fas fa-plus"></i></button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="item-card mini" data-id="202" data-name="Guaraná 1L" data-price="9.99">
+                            <div class="card-img"><img src="assets/bebidas/antarctica-removebg-preview.png" alt="Guaraná 1L" onerror="this.style.display='none'; this.parentNode.classList.add('no-img')"></div>
+                            <div class="card-details">
+                                <h4>Guaraná 1L</h4>
+                                <div class="card-footer">
+                                    <span class="price">R$ 9,99</span>
+                                    <button class="add-btn icon-only"><i class="fas fa-plus"></i></button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- ABA 2: PROMOÇÕES -->
+            <div id="tab-promocoes" class="tab-content">
+                <div class="promo-banner">
+                    <div class="promo-text">
+                        <h3>OFERTAS RELÂMPAGO</h3>
+                        <p>Aproveite antes que acabe!</p>
+                    </div>
+                    <i class="fas fa-bolt promo-icon"></i>
+                </div>
+                <!-- Tentar deixar os Combos com ids da 221 a 250->
+                <!Combos Com (ids 221 - 250) -->
+                <div class="menu-grid">
+                    <div class="item-card promo" data-id="221" data-name="PROMO: GRANDE ESTICADO " data-price="61.99">
+                        <span class="tag-discount">Popular</span>
+                        <div class="card-details">
+                            <h4>GRANDE ESTICADO </h4>
+                            <p>PIZZA GRANDE, REFRIGERANTE , BORDA CHEDDAR .</p>
+                            <div class="card-footer">
+                                <div class="price-group">
+                                    <span class="price">R$ 61,99</span>
+                                </div>
+                                <button class="add-btn">Eu Quero!</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="item-card promo" data-id="222" data-name="PROMO: DOCE ENCONTRO " data-price="71.40">
+                        <span class="tag-discount">Popular</span>
+                        <div class="card-details">
+                            <h4>DOCE ENCONTRO </h4>
+                            <p>1 Pizza grande, 1 açai 360ml com 3 adicionais, 1 refrigerante 1L.</p>
+                            <div class="card-footer">
+                                <div class="price-group">
+                                    <span class="price">R$ 71,40</span>
+                                </div>
+                                <button class="add-btn">Eu Quero!</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="item-card promo" data-id="223" data-name="PROMO: Combo Pizza Grande" data-price="74.99">
+                        <span class="tag-discount" style="background: #ffb700; color: black;">POPULAR</span>
+                        <div class="card-details">
+                            <h4>Combo Pizza Grande</h4>
+                            <p>Mussarela, Calabresa ou Marguerita + Pizza Média Doce + Refri 1 litro</p>
+                            <div class="card-footer">
+                                <div class="price-group">
+                                    <span class="price">R$ 74,99</span>
+                                </div>
+                                <button class="add-btn">Eu Quero!</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="item-card promo" data-id="224" data-name="PROMO: Combo Família" data-price="91.99">
+                        <span class="tag-discount" style="background: #ffb700; color: black;">POPULAR</span>
+                        <div class="card-details">
+                            <h4>Combo Família</h4>
+                            <p>1 Pizza G + 1 Refri 2L.</p>
+                            <div class="card-footer">
+                                <div class="price-group">
+                                    <span class="price">R$ 91,99</span>
+                                </div>
+                                <button class="add-btn">Eu Quero!</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="item-card promo" data-id="225" data-name="PROMO: Combo Mozão" data-price="75.99">
+                        <span class="tag-discount" style="background: #ec0202;">Apaixonado!</span>
+                        <div class="card-details">
+                            <h4>Combo Mozão</h4>
+                            <p>Pizza em formato de coração de até dois sabores, com borda recheada e um refrigerante grátis..</p>
+                            <div class="card-footer">
+                                <div class="price-group">
+                                    <span class="price">R$ R$ 75,99</span>
+                                </div>
+                                <button class="add-btn">Eu Quero!</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="item-card promo" data-id="226" data-name="PROMO: Combo Calzone + Bebida" data-price="56.99">
+                        <span class="tag-discount" style="background: #06d339;">Legal!</span>
+                        <div class="card-details">
+                            <h4>Combo Calzone + Bebida</h4>
+                            <p>Calzonezão recheado daquele jeito que só a Top Baiana sabe fazer + Bebida</p>
+                            <div class="card-footer">
+                                <div class="price-group">
+                                    <span class="price">R$ 56,99</span>
+                                </div>
+                                <button class="add-btn">Eu Quero!</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ABA 3: CARRINHO -->
+            <div id="tab-carrinho" class="tab-content">
+                <div class="cart-panel">
+                    <div id="cart-items-list" class="cart-list"></div>
+
+                    <div class="cart-summary">
+                        <div class="summary-row">
+                            <span>Subtotal</span>
+                            <span id="cart-subtotal">R$ 0,00</span>
+                        </div>
+                        <div class="summary-row total">
+                            <span>Total</span>
+                            <span id="cart-total-value">R$ 0,00</span>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label><i class="fas fa-wallet"></i> Pagamento</label>
+                        <select id="payment-select">
+                            <option value="Pix">Pix (Chave Celular)</option>
+                            <option value="Cartão de Crédito">Cartão de Crédito (Maquininha)</option>
+                            <option value="Cartão de Débito">Cartão de Débito</option>
+                            <option value="Dinheiro">Dinheiro (Informar Troco)</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group" id="troco-div" style="display:none;">
+                        <label>Troco para quanto?</label>
+                        <input type="number" id="troco-input" placeholder="Ex: 50" oninput="if(this.value.length > 3) this.value = this.value.slice(0, 3);">
+                    </div>
+
+                    <div class="form-group">
+                        <label><i class="fas fa-map-marker-alt"></i> Endereço / Obs</label>
+                        <textarea id="address-input" rows="2" placeholder="Rua, Número, Bairro e Ponto de Referência..."></textarea>
+                    </div>
+
+                    <button id="checkout-btn" class="checkout-button" disabled>
+                        <span>Enviar Pedido</span>
+                        <i class="fab fa-whatsapp"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- ABA 4: PERFIL -->
+            <div id="tab-perfil" class="tab-content">
+                <div class="cart-panel profile-wrapper">
+                    
+                    <div class="profile-header">
+                        <i class="fas fa-user-astronaut"></i>
+                        <h3>Cartão de Membro</h3>
+                        <p>ID: VIP-CLIENT</p>
+                    </div>
+
+                    <div class="desktop-row">
+                        <div class="form-group">
+                            <label>NOME CADASTRADO</label>
+                            <input type="text" id="perfil-name" placeholder="Seu nome">
+                        </div>
+
+                        <div class="form-group">
+                            <label>TELEFONE (WHATSAPP)</label>
+                            <input type="tel" id="perfil-phone" placeholder="(71) 99999-9999" maxlength="15">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label>ENDEREÇO PADRÃO</label>
+                        <textarea id="perfil-address" rows="3" placeholder="Rua, Número, Bairro e Ponto de Referência..."></textarea>
+                    </div>
+
+                    <button class="save-user-btn" onclick="salvarPerfilCompleto()">
+                        <i class="fas fa-save"></i> Salvar Dados
+                    </button>
+
+                    <button class="logout-btn" onclick="fazerLogout()">
+                        <i class="fas fa-power-off"></i> Desconectar
+                    </button>
+                </div>
+            </div>
+
+        </div> 
+        
+        <!-- MENU INFERIOR (NAVIGATION) -->
+        <nav class="bottom-nav">
+            <div class="nav-item active" data-target="tab-pedidos">
+                <div class="icon-box"><i class="fas fa-book-open"></i></div>
+                <span>Cardápio</span>
+            </div>
+            <div class="nav-item" data-target="tab-promocoes">
+                <div class="icon-box"><i class="fas fa-bolt"></i></div>
+                <span>Ofertas</span>
+            </div>
+            <div class="nav-item" data-target="tab-carrinho">
+                <div class="icon-box"><i class="fas fa-shopping-cart"></i></div>
+                <span>Carrinho</span>
+            </div>
+            <div class="nav-item" data-target="tab-perfil">
+                <div class="icon-box"><i class="fas fa-user-circle"></i></div>
+                <span>Perfil</span>
+            </div>
+        </nav>
+
+    </section>
+
+    <!-- MODAL DE CADASTRO (APENAS UM AQUI NO FINAL) -->
+    <div id="modal-cadastro" class="modal-overlay">
+        <div class="modal-box">
+            <div class="modal-header">
+                <h3><i class="fas fa-user-lock"></i> Identificação</h3>
+                <button class="close-modal" onclick="fecharModal()">×</button>
+            </div>
+            <div class="modal-body">
+                <p>Precisamos saber quem você é para entregar seu pedido!</p>
+                
+                <div class="form-group">
+                    <label>Seu Nome Completo</label>
+                    <input type="text" id="client-name" placeholder="Ex: João Silva">
+                </div>
+
+                <div class="form-group">
+                    <label>Seu WhatsApp / Telefone</label>
+                    <input type="tel" id="client-phone" placeholder="Ex: 71 99999-9999">
+                </div>
+
+                <button class="save-user-btn" onclick="salvarCliente()">
+                    Salvar e Continuar
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL DE OPÇÕES DE PIZZA -->
+    <div id="modal-opcoes" class="modal-overlay">
+        <div class="modal-box">
+            <div class="modal-header">
+                <h3 id="modal-item-name">Personalizar</h3>
+                <button class="close-modal" onclick="fecharModalOpcoes()">×</button>
+            </div>
+            <div class="modal-body">
+                <div id="lista-adicionais" class="adicionais-container"></div>
+                <div class="form-group">
+                    <label><i class="fas fa-comment-dots"></i> Observações</label>
+                    <textarea id="obs-item" placeholder="Ex: Tirar cebola, caprichar no orégano..."></textarea>
+                </div>
+                <div class="modal-footer-price">
+                    <span>Total do Item:</span>
+                    <span id="modal-item-total" class="price-big">R$ 0,00</span>
+                </div>
+                <button class="save-user-btn" onclick="confirmarAdicaoCarrinho()">
+                    Adicionar ao Pedido
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
